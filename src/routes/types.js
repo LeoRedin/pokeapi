@@ -1,4 +1,6 @@
 import express from 'express'
+import mongoose from 'mongoose'
+import { Type } from '../models'
 
 function getTypesRoutes() {
   const router = express.Router()
@@ -14,24 +16,27 @@ async function getAllTypes(req, res) {
 }
 
 async function createType(req, res) {
-  // console.log(req.body)
-  // res.send('Funcionou o post')
+  // preciso receber do front?
+  // nome do tipo
+  const { name } = req.body
 
-  // @TODO
-  /* Salvar no BD esse tipo */
-
-  const { user } = req.body
-
-  if (user !== 'Leo') {
-    res.status(403).json({
-      message: 'Permissão negada',
+  // FAIL FIRST
+  if (!name)
+    res.status(400).json({
+      success: false,
+      message: 'O nome do tipo é obrigatório',
     })
-  }
 
-  res.status(201).json({
+  const newType = new Type({
+    _id: new mongoose.Types.ObjectId(),
+    name,
+  })
+
+  await newType.save()
+
+  res.json({
     success: true,
-    createdBy: user,
-    date: new Date(),
+    newType,
   })
 }
 
