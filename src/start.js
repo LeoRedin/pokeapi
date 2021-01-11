@@ -1,10 +1,21 @@
 import express from 'express'
 import bodyParser from 'body-parser'
+import mongoose from 'mongoose'
 
 import { getRoutes } from './router'
 
+function initializeMongo() {
+  mongoose
+    .connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => console.log('Conectado com sucesso no mongo'))
+    .catch(err => console.err(err))
+}
+
 function startServer({ port = process.env.PORT } = {}) {
-  console.log('porta', process.env.PORT)
+  // console.log('porta', process.env.PORT)
   const app = express()
 
   app.use(bodyParser.json())
@@ -22,4 +33,4 @@ function startServer({ port = process.env.PORT } = {}) {
 }
 
 // export default startServer
-export { startServer }
+export { startServer, initializeMongo }
