@@ -6,19 +6,32 @@ function getTypesRoutes() {
   const router = express.Router()
 
   router.get('/all', getAllTypes)
+  router.get('/:type', getByType)
   router.post('/create', createType)
 
   return router
 }
 
 async function getAllTypes(req, res) {
-  res.send('Pegando todos os tipos')
+  const types = await Type.find({})
+
+  res.json({
+    types,
+  })
+}
+
+async function getByType(req, res) {
+  // @TODO pegar um único registro do banco
+
+  res.json({
+    success: false,
+  })
 }
 
 async function createType(req, res) {
   // preciso receber do front?
   // nome do tipo
-  const { name } = req.body
+  const { name, hex } = req.body
 
   // FAIL FIRST
   if (!name)
@@ -28,10 +41,11 @@ async function createType(req, res) {
     })
 
   const newType = new Type({
-    _id: new mongoose.Types.ObjectId(),
     name,
+    hex,
   })
 
+  // @TODO como lidar com erros ao salvar :)
   await newType.save()
 
   res.json({
