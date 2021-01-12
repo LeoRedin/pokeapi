@@ -22,9 +22,13 @@ async function getAllTypes(req, res) {
 
 async function getByType(req, res) {
   // @TODO pegar um único registro do banco
+  const typeName = req.params.type
+
+  const type = await Type.findOne({ name: typeName })
 
   res.json({
-    success: false,
+    success: true,
+    type
   })
 }
 
